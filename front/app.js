@@ -77,8 +77,10 @@ async function editUser() {
 
     infoDisplay.innerHTML = (response.status !== 200) ? data.error : '';
 
-    editUserDiv.innerHTML = '';
-    await generateUserTable();
+    if (response.status === 200) {
+        editUserDiv.innerHTML = '';
+        await generateUserTable();
+    }
 }
 
 async function showUserDetails(ele) {
