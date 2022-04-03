@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { User, validate } = require('../models/user')
+const mongoose = require("mongoose");
 
 // Get all the users
 router.get('/', async (req, res) => {
@@ -32,6 +33,8 @@ router.post('/', async (req, res) => {
 
 // Update a user
 router.put('/:id', async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ error: 'Not a valid ID format.' })
+
     const { error } = validate(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
@@ -50,6 +53,8 @@ router.put('/:id', async (req, res) => {
 
 // Delete a user
 router.delete('/:id', async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ error: 'Not a valid ID format.' })
+
     const user = await User.findByIdAndRemove(req.params.id);
     if (!user) return res.status(404).json({ error: 'No match for the ID.' });
 
@@ -58,6 +63,8 @@ router.delete('/:id', async (req, res) => {
 
 // Get a user
 router.get('/:id', async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ error: 'Not a valid ID format.' })
+
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({error: 'No match for the ID.' });
 
